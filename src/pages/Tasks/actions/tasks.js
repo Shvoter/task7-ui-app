@@ -12,29 +12,6 @@ import {
     deleteJson,
 } from "../../../requests";
 
-let prepareData = [
-    {
-        id: 1,
-        title: 'Task1',
-        state: 'started',
-        priority: 'low',
-        updatedAt: '2023-01-16 14:00:11.480271',
-    },
-    {
-        id: 2,
-        title: 'Task2',
-        state: 'in progress',
-        priority: 'medium',
-        updatedAt: '2023-01-16 14:10:11.480271',
-    },
-    {
-        id: 3,
-        title: 'Task3',
-        state: 'finished',
-        priority: 'high',
-        updatedAt: '2023-01-16 14:20:11.480271',
-    },
-]
 const requestTasks = () => (
     {
         type: REQUEST_TASKS,
@@ -79,8 +56,6 @@ const getTasks = () => {
 
     return getJson({
         url: `${BASE_URL}/tasks`,
-    }).catch(() => {
-        return prepareData;
     });
 };
 
@@ -94,9 +69,7 @@ const removeTask = (id) => {
             id: id
         },
         url: `${BASE_URL}/tasks`
-    }).catch(() => {
-        return {};
-    })
+    });
 }
 
 export const fetchTasks = () => (dispatch) => {

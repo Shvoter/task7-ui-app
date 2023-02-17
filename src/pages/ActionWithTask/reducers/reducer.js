@@ -13,7 +13,12 @@ import {
 const initialState = {
     isLoading: false,
     isError: false,
-    task: {}
+    task: {
+        id: '',
+        title: '',
+        state: '',
+        priority: '',
+    }
 }
 
 export default (state = initialState, action) => {
@@ -51,6 +56,7 @@ export default (state = initialState, action) => {
                 isError: true,
             };
         }
+
         default: return state;
     }
 }

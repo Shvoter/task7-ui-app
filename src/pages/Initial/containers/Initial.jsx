@@ -43,7 +43,7 @@ const Initial = ({
       ))}
       {!canSeeList && (
         <Typography>
-          Не могу ничего показать :(
+          No access
         </Typography>
       )}
     </div>

@@ -24,17 +24,22 @@ const getClasses = makeStyles(() => ({
 }));
 
 function Tasks({ authorities }) {
+    const classes = getClasses();
+    const canSeeList = useAccessValidate({
+        ownedAuthorities: authorities,
+        neededAuthorities: AUTHORITIES,
+    });
 
     const [state, setState] = useState({
         isActualTasksData: false,
     });
 
+    const dispatch = useDispatch();
     const {
         isLoading,
         isError,
         list,
     } = useSelector(({ reducer }) => reducer);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!state.isActualTasksData) {
@@ -47,20 +52,13 @@ function Tasks({ authorities }) {
         }
     }, [state.isActualTasksData]);
 
-    const canSeeList = useAccessValidate({
-        ownedAuthorities: authorities,
-        neededAuthorities: AUTHORITIES,
-    });
-
     const clickDeleteHandler = useCallback((id) => {
         dispatch(fetchDeleteTask(id))
-            .then(() => setState({
-                ...state,
-                isActualTasksData: false
-            }))
+            .then(() => setState(prevState => ({
+                ...prevState,
+                isActualTasksData: false,
+            })));
     }, []);
-
-    const classes = getClasses();
 
     return (
         <div>
@@ -75,12 +73,14 @@ function Tasks({ authorities }) {
                                     <th><Typography>title</Typography></th>
                                     <th><Typography>state</Typography></th>
                                     <th><Typography>priority</Typography></th>
-                                    <th><Typography>updatedAt</Typography></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {list.map((task) => (
-                                    <tr key={task.id} className={classes.row}>
+                                    <tr
+                                        key={task.id}
+                                        className={classes.row}
+                                    >
                                         <td><Typography>{task.id}</Typography></td>
                                         <td><Typography>{task.title}</Typography></td>
                                         <td><Typography>{task.state}</Typography></td>
@@ -98,7 +98,8 @@ function Tasks({ authorities }) {
                                                     ...location,
                                                     pathname:`/${PAGES.ACTION_WITH_TASK}`,
                                                     search: `${location.search}&id=${task.id}`
-                                                }))}>
+                                                }))}
+                                            >
                                                 <button
                                                     className={classes.hiddenButton}
                                                 >
@@ -115,7 +116,8 @@ function Tasks({ authorities }) {
                                     ...location,
                                     pathname:`/${PAGES.ACTION_WITH_TASK}`,
                                     search: `${location.search}`
-                                }))}>
+                                }))}
+                            >
                                 <button
                                 >
                                     <Typography>Create</Typography>
@@ -125,19 +127,19 @@ function Tasks({ authorities }) {
                     )}
                     {(isLoading || !state.isActualTasksData) && (
                     <div>
-                        <Typography>Загрузка...</Typography>
+                        <Typography>Loading...</Typography>
                     </div>
                     )}
                     {isError && (
                         <div>
-                            <Typography>Error</Typography>
+                            <Typography>Error!!!</Typography>
                         </div>
                     )}
                 </div>
             )}
             {!canSeeList && (
                 <div>
-                    <Typography>Нет доступа</Typography>
+                    <Typography>No access</Typography>
                 </div>
             )}
         </div>

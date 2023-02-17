@@ -35,33 +35,43 @@ const getTask = (id) => {
     } = config;
 
     return getJson({
-        url: `${BASE_URL}/task?id=${id}`,
-    }).catch(() => {
-
+        params: {
+            id: id
+        },
+        url: `${BASE_URL}/task`,
     });
 };
 
-const updateTask = (id) => {
+const updateTask = (task) => {
     const {
         BASE_URL,
     } = config;
 
     return putJson({
-        url: `${BASE_URL}/task?id=${id}`,
-    }).catch(() => {
-
+        body: {
+                title: task.title,
+                state: task.state,
+                priority: task.priority,
+        },
+        params: {
+            id: task.id
+        },
+        url: `${BASE_URL}/task`,
     });
 };
 
-const createTask = () => {
+const createTask = (task) => {
     const {
         BASE_URL,
     } = config;
 
     return postJson({
+        body: {
+            title: task.title,
+            state: task.state,
+            priority: task.priority,
+        },
         url: `${BASE_URL}/task`,
-    }).catch(() => {
-
     });
 };
 
@@ -73,16 +83,16 @@ export const fetchTask = (id) => (dispatch) => {
         .catch(() => dispatch(simpleTypeAction(ERROR_RECEIVE_TASK)));
 };
 
-export const fetchUpdateTask = (id) => (dispatch) => {
+export const fetchUpdateTask = (task) => (dispatch) => {
     dispatch(simpleTypeAction(REQUEST_UPDATE_TASK));
-    return updateTask(id)
+    return updateTask(task)
         .then(() => dispatch(simpleTypeAction(UPDATE_TASK)))
         .catch(() => dispatch(simpleTypeAction(ERROR_UPDATE_TASK)));
 };
 
-export const fetchCreateTask = (id) => (dispatch) => {
+export const fetchCreateTask = (task) => (dispatch) => {
     dispatch(simpleTypeAction(REQUEST_CREATE_TASK));
-    return createTask()
+    return createTask(task)
         .then(() => dispatch(simpleTypeAction(CREATE_TASK)))
         .catch(() => dispatch(simpleTypeAction(ERROR_CREATE_TASK)));
 };
